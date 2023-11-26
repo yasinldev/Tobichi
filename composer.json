@@ -1,11 +1,5 @@
 {
-    "name": "ozkay/tobichi",
-    "authors": [
-        {
-            "name": "Yasin Özkaya",
-            "email": "90653146+yasinldev@users.noreply.github.com"
-        }
-    ],
+    "name": "yasinldev/tobichi",
     "autoload": {
         "psr-4": {
             "Compiler\\": "src/compiler"
