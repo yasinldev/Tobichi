@@ -79,6 +79,7 @@ class Parser {
      */
     private function factor(): Ast {
         $token = $this->currentToken;
+        //echo $token->type->value. $token->value . PHP_EOL;
 
         switch ($token->type) {
             case TokenTypes::T_PLUS:
@@ -95,6 +96,11 @@ class Parser {
                 $this->eat(TokenTypes::T_CLOSE_PARENTHESIS);
                 return $node;
 
+            case TokenTypes::T_ASSIGN:
+                $this->eat(TokenTypes::T_ASSIGN);
+                $stringedExpr = $this->expr();
+                return new AssignNode($this->variable(), $stringedExpr->type, $token);
+
             case TokenTypes::T_STRING:
             case TokenTypes::T_INT:
             case TokenTypes::T_BOOL:
@@ -108,13 +114,26 @@ class Parser {
                 $this->eat($token->type);
                 return new UnaryNode($this->variable(), $token);
 
+            case TokenTypes::T_SEMICOLON:
+                $this->eat(TokenTypes::T_SEMICOLON);
+                break;
+
+            case TokenTypes::T_IDENTIFIER:
+                $this->eat(TokenTypes::T_IDENTIFIER);
+                return new VariableNode($token, $token->value);
+
+            case TokenTypes::T_RETURN:
+                $this->eat(TokenTypes::T_RETURN);
+                return new ReturnNode($this->expr(), $token);
 
             default:
-                throw new Exception("Unexpected Token: {$this->currentToken->value}. Expected: Data Types, at position {$this->lexer->getPosition()}.");
+                $string = $token->type->value;
+                throw new Exception("Unexpected Token: {$string}. Expected: Data Types, at position {$this->lexer->getPosition()}.");
         }
+
+        // Bu kısım çalışmayabilir. o yüzden yorum satırı koydum.
+        return new VariableNode($token, $token->value);
     }
-
-
 
     /**
      * @throws Exception
@@ -123,9 +142,6 @@ class Parser {
         $tokenType = $this->currentToken->type;
 
         switch ($tokenType) {
-            case TokenTypes::T_IDENTIFIER:
-                $this->eat(TokenTypes::T_IDENTIFIER);
-                break;
             case TokenTypes::T_INT:
             case TokenTypes::T_STRING:
             case TokenTypes::T_BOOL:
@@ -133,13 +149,18 @@ class Parser {
             case TokenTypes::T_FLOAT:
             case TokenTypes::T_ARRAY:
                 $this->eat($tokenType);
-                $this->eat(TokenTypes::T_IDENTIFIER);
             break;
+            case TokenTypes::T_IDENTIFIER:
+                $this->eat(TokenTypes::T_IDENTIFIER);
+                break;
+            case TokenTypes::T_SEMICOLON:
+                $this->eat(TokenTypes::T_SEMICOLON);
+                break;
             default:
                 throw new Exception("Unexpected Token: {$tokenType->name}. Expected: Data Types, at position {$this->lexer->getPosition()}.");
         }
 
-        return new VariableNode($this->currentToken);
+        return new VariableNode($this->currentToken, $tokenType->value);
     }
 
 
@@ -234,20 +255,20 @@ class Parser {
         }
 
         $this->eat(TokenTypes::T_OPEN_BRACE);
-        $statements = $this->statements($returnType);
+        $statements = $this->statements();
         $this->eat(TokenTypes::T_CLOSE_BRACE);
 
-        return new FunctionNode($params, $statements, $this->currentToken, $returnType, $name);
+        return new FunctionNode($params, $statements, $this->currentToken, $returnType->value, $name);
     }
 
     /**
      * @throws Exception
      */
-    private function statements($returnType): Ast {
+    private function statements(): Ast {
         $statements = [];
 
         while ($this->currentToken->type !== TokenTypes::T_CLOSE_BRACE) {
-            $statements[] = $this->statement($returnType);
+            $statements[] = $this->statement();
         }
 
         return new BlockNode($statements, $this->currentToken);
@@ -256,14 +277,14 @@ class Parser {
     /**
      * @throws Exception
      */
-    private function statement($returnType): Ast {
+    private function statement(): Ast {
         $token = $this->currentToken;
 
         switch ($token->type) {
-            case TokenTypes::T_RETURN: return $this->parseReturnStatement($returnType);
-            case TokenTypes::T_IF: return $this->parseIfStatement($returnType);
-            case TokenTypes::T_WHILE: return $this->parseWhileStatement($returnType);
-            case TokenTypes::T_FOR: return $this->parseForStatement($returnType);
+            case TokenTypes::T_RETURN: return $this->parseReturnStatement();
+            case TokenTypes::T_IF: return $this->parseIfStatement();
+            case TokenTypes::T_WHILE: return $this->parseWhileStatement();
+            case TokenTypes::T_FOR: return $this->parseForStatement();
             case TokenTypes::T_FUNCTION: return $this->fn();
         }
 
@@ -274,15 +295,9 @@ class Parser {
      * @throws Exception
      */
 
-    private function parseReturnStatement($returnType): Ast {
+    private function parseReturnStatement(): Ast {
         $this->eat(TokenTypes::T_RETURN);
         $value = $this->expr();
-
-        if ($returnType !== null) {
-            if ($value->token->type !== $returnType) {
-                throw new Exception("Unexpected Token: {$value->token->type->value}. Expected: {$returnType->value}, at position {$this->lexer->getPosition()}.");
-            }
-        }
 
         return new ReturnNode($value, $this->currentToken);
     }
@@ -290,11 +305,11 @@ class Parser {
     /**
      * @throws Exception
      */
-    private function parseIfStatement($returnType): Ast {
+    private function parseIfStatement(): Ast {
         $this->eat(TokenTypes::T_IF);
         $condition = $this->expr();
         $this->eat(TokenTypes::T_OPEN_BRACE);
-        $statements = $this->statements($returnType);
+        $statements = $this->statements();
         $this->eat(TokenTypes::T_CLOSE_BRACE);
 
         $elseif = null;
@@ -303,12 +318,12 @@ class Parser {
         if ($this->currentToken->type == TokenTypes::T_ELSEIF) {
             $this->eat(TokenTypes::T_ELSEIF);
             $this->eat(TokenTypes::T_OPEN_BRACE);
-            $elseif = $this->statements($returnType);
+            $elseif = $this->statements();
             $this->eat(TokenTypes::T_CLOSE_BRACE);
         } else if ($this->currentToken->type == TokenTypes::T_ELSE) {
             $this->eat(TokenTypes::T_ELSE);
             $this->eat(TokenTypes::T_OPEN_BRACE);
-            $else = $this->statements($returnType);
+            $else = $this->statements();
             $this->eat(TokenTypes::T_CLOSE_BRACE);
         }
 
@@ -318,11 +333,11 @@ class Parser {
     /**
      * @throws Exception
      */
-    private function parseWhileStatement($returnType): Ast {
+    private function parseWhileStatement(): Ast {
         $this->eat(TokenTypes::T_WHILE);
         $condition = $this->expr();
         $this->eat(TokenTypes::T_OPEN_BRACE);
-        $statements = $this->statements($returnType);
+        $statements = $this->statements();
         $this->eat(TokenTypes::T_CLOSE_BRACE);
 
         return new WhileNode($condition, $statements, $this->currentToken);
@@ -331,7 +346,7 @@ class Parser {
     /**
      * @throws Exception
      */
-    private function parseForStatement($returnType): Ast {
+    private function parseForStatement(): Ast {
         $this->eat(TokenTypes::T_FOR);
         $this->eat(TokenTypes::T_OPEN_PARENTHESIS);
         $init = $this->expr();
@@ -341,7 +356,7 @@ class Parser {
         $increment = $this->expr();
         $this->eat(TokenTypes::T_CLOSE_PARENTHESIS);
         $this->eat(TokenTypes::T_OPEN_BRACE);
-        $statements = $this->statements($returnType);
+        $statements = $this->statements();
         $this->eat(TokenTypes::T_CLOSE_BRACE);
 
         return new ForNode($init, $condition, $increment, $statements, $this->currentToken);
@@ -354,7 +369,7 @@ class Parser {
         $statements = [];
 
         while ($this->currentToken->type !== TokenTypes::T_EOF) {
-            $statements[] = $this->statement(null);
+            $statements[] = $this->statement();
         }
 
         return new BlockNode($statements, $this->currentToken);
@@ -362,10 +377,10 @@ class Parser {
 }
 
 $input = '
-    fn example_fn((int)variable1, (string)variable2) -> (int) {
-       (int)variable3 = variable1 + variable1;
+    fn example_fn((int)sayi1, (string)sayi2) -> (int) {
+       (int)sayi3 = sayi1 + sayi1;
        
-       ret variable3;
+       ret (int)sayi3;
     }
 ';
 try {
