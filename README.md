@@ -29,6 +29,7 @@ The following is the planned syntax for the first release of Tobichi:
 
 mutable (string)variable = "Hello, World!";
 
+// memory allocation
 (string)refVar(&(variable));
 ```
 
