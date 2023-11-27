@@ -14,3 +14,58 @@ Tobichi is in development and is not yet ready for use. The following features a
 - [ ] Tests
 - [ ] Examples
 
+## Planned Syntax
+
+The following is the planned syntax for the first release of Tobichi:
+
+### Creating Variables
+
+```tobichi
+(string)variable = "Hello, World!";
+(int)variable = 123;
+(float)variable = 123.456;
+(bool)variable = true;
+(char)variable = 'a';
+
+mutable (string)variable = "Hello, World!";
+
+(string)refVar(&(variable));
+```
+
+### Creating Functions
+
+```tobichi
+fn hello_world() -> (string) {
+    ret "Hello, World!";
+}
+
+fn example_fn((int)variable_1, (int)variable_2) -> (int) {
+    ret variable_1 + variable_2;
+}
+
+fn example_fn((int)refVar(&(variable)), (int)variable_2) -> (int) {
+    ret variable_1 + variable_2;
+}
+```
+
+### Creating Structs
+
+```tobichi
+
+struct example_struct {
+    (int)variable_1;
+    (int)variable_2;
+}
+
+```
+
+### Creating Enums
+
+```tobichi
+
+enum example_enum {
+    (int)variable_1;
+    (int)variable_2;
+}
+
+```
