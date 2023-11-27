@@ -73,6 +73,8 @@ enum TokenTypes: string
     case T_OPEN_BRACE = '{';
     case T_CLOSE_BRACE = '}';
     case T_COMMENT = '//';
+    case T_DOUBLE_QUOTE = '"';
+    case T_SINGLE_QUOTE = '\'';
 
     case T_EOF = 'EOF';
 

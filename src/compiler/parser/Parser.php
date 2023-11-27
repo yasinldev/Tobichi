@@ -377,11 +377,7 @@ class Parser {
 }
 
 $input = '
-    fn example_fn((int)sayi1, (string)sayi2) -> (int) {
-       (int)sayi3 = sayi1 + sayi1;
-       
-       ret (int)sayi3;
-    }
+    (string)variable = "Hello World";
 ';
 try {
     $lexer = new Lexer($input);
