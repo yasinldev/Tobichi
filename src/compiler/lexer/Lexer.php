@@ -250,6 +250,12 @@ class Lexer {
                 case '{':
                     $this->advance();
                     return new Token(TokenTypes::T_OPEN_BRACE);
+                case '"':
+                    $this->advance();
+                    return new Token(TokenTypes::T_DOUBLE_QUOTE);
+                case '\'':
+                    $this->advance();
+                    return new Token(TokenTypes::T_SINGLE_QUOTE);
                 case '}':
                     $this->advance();
                     return new Token(TokenTypes::T_CLOSE_BRACE);
