@@ -1,6 +1,0 @@
-/vendor
-/phpcs.xml
-/phpstan.neon
-/phpunit.xml
-.fetch_time_cache
-.cache
