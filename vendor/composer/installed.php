@@ -3,7 +3,7 @@
         'name' => 'yasinldev/tobichi',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'b58a67e00f0e012107e61417b97867d5d170afc3',
+        'reference' => 'ea4273a72bdb5b63d38e91c047847794ad89ef3f',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -31,7 +31,7 @@
         'yasinldev/tobichi' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'b58a67e00f0e012107e61417b97867d5d170afc3',
+            'reference' => 'ea4273a72bdb5b63d38e91c047847794ad89ef3f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
