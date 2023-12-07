@@ -6,6 +6,7 @@
         }
     },
     "require": {
-        "ext-ctype": "*"
+        "ext-ctype": "*",
+        "antlr/antlr4-php-runtime": "^0.9.1"
     }
 }
