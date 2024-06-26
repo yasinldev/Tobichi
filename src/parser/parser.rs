@@ -9,7 +9,11 @@ pub enum Expr<'a> {
     While {
         condition: Box<Expr<'a>>,
         body: Vec<Expr<'a>>
-    }
+    },
+    Variables {
+        name: Ident<'a>,
+        value: Box<Expr<'a>>
+    },
 }
 
 pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
@@ -29,7 +33,7 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
                 if let Some(value) = token.value {
                     expr_tree.push(
                         Builtin(Ident {
-                            kind: IdentKind::Var,
+                            kind: IdentKind::Identifier,
                             value: Some(value),
                         })
                     )
@@ -37,6 +41,9 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
                     println!("Unexpected token: {:?}", token);
                 }
             },
+            TokenKind::Var => {
+                println!("Var Token: {:?}", token);
+            }
             TokenKind::While => {
                 if let Some(condition_expr) = parse_expr(&mut token_iter) {
                     let mut body = Vec::new();
@@ -71,7 +78,6 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
 fn parse_expr<'a, I>(token_iter: &mut std::iter::Peekable<I>) -> Option<Expr<'a>>
     where I: Iterator<Item = Token<'a>> {
     if let Some(token) = token_iter.next() {
-        println!("Token: {:?}", token.kind);
         match token.kind {
             TokenKind::Literal(ref literal_kind) => {
                 if let Some(value) = token.value {

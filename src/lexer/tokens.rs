@@ -24,6 +24,10 @@ pub enum Tokens<'a> {
     Less,
     #[token(":")]
     ThreeDot,
+    #[token("{")]
+    OpenBrace,
+    #[token("}")]
+    CloseBrace,
     #[regex("-?([0-9])+", |lex| lex.slice().parse())]
     Number(f64),
     #[token("var")]
@@ -50,6 +54,8 @@ pub enum Tokens<'a> {
 pub enum TokenKind {
     ThreeDot,
     Semicolon,
+    OpenBrace,
+    CloseBrace,
     OpenParen,
     CloseParen,
     Plus,
@@ -87,6 +93,9 @@ pub enum IdentKind {
     Plus,
     Minus,
     ThreeDot,
+    OpenBrace,
+    CloseBrace,
+    Identifier,
     Semicolon,
     Star,
     Slash,
@@ -114,6 +123,9 @@ impl<'a> Ident<'a> {
             | IdentKind::Slash
             | IdentKind::Greater
             | IdentKind::ThreeDot
+            | IdentKind::OpenBrace
+            | IdentKind::CloseBrace
+            | IdentKind::Identifier
             | IdentKind::Less
             | IdentKind::While
             | IdentKind::If
