@@ -12,7 +12,7 @@ use lexer::lexer::get_token_stream;
 
 fn main() {
     let raw_code = String::from(r#"
-        var x = 42;
+        var x: str = 42;
         while (x > 0) {
             x = x - 1;
         }
@@ -29,6 +29,22 @@ fn main() {
         println!("{:?}", token);
     }
 }
+```
+
+The output of the above code should be as follows
+
+```
+Token { kind: Ident(Var), value: None }
+Token { kind: Ident(Var), value: Some(String("x")) }
+Token { kind: ThreeDot, value: None }
+Token { kind: Ident(Var), value: Some(String("str")) }
+Token { kind: Assign, value: None }
+Token { kind: Literal(Number), value: Some(Number(42.0)) }
+Token { kind: Ident(While), value: None }
+Token { kind: OpenParen, value: None }
+Token { kind: Ident(Var), value: Some(String("x")) }
+Token { kind: Greater, value: None }
+...
 ```
 
 ## Parser

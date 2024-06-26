@@ -3,7 +3,7 @@ use lexer::lexer::get_token_stream;
 
 fn main() {
     let raw_code = String::from(r#"
-        var x = 42;
+        var x: str = 42;
         while (x > 0) {
             x = x - 1;
         }
