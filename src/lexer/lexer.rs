@@ -40,6 +40,8 @@ pub fn get_token_stream(raw_code: &String) -> Vec<Token> {
             Some(Tokens::Assign) => (TokenKind::Assign, None),
             Some(Tokens::Greater) => (TokenKind::Greater, None),
             Some(Tokens::Less) => (TokenKind::Less, None),
+            Some(Tokens::ThreeDot) => (TokenKind::ThreeDot, None),
+            Some(Tokens::Semicolon) => (TokenKind::Semicolon, None),
             Some(Tokens::Var) => (TokenKind::Ident(IdentKind::Var), None),
             Some(Tokens::While) => (TokenKind::Ident(IdentKind::While), None),
             Some(Tokens::If) => (TokenKind::Ident(IdentKind::If), None),

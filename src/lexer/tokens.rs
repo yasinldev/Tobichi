@@ -18,6 +18,8 @@ pub enum Tokens<'a> {
     Assign,
     #[token(">")]
     Greater,
+    #[token(";")]
+    Semicolon,
     #[token("<")]
     Less,
     #[token(":")]
@@ -47,6 +49,7 @@ pub enum Tokens<'a> {
 #[derive(Debug, PartialEq, Clone)]
 pub enum TokenKind {
     ThreeDot,
+    Semicolon,
     OpenParen,
     CloseParen,
     Plus,
@@ -84,6 +87,7 @@ pub enum IdentKind {
     Plus,
     Minus,
     ThreeDot,
+    Semicolon,
     Star,
     Slash,
     Assign,
