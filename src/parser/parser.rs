@@ -75,8 +75,7 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
     expr_tree
 }
 
-fn parse_expr<'a, I>(token_iter: &mut std::iter::Peekable<I>) -> Option<Expr<'a>>
-    where I: Iterator<Item = Token<'a>> {
+fn parse_expr<'a, I>(token_iter: &mut std::iter::Peekable<I>) -> Option<Expr<'a>> where I: Iterator<Item = Token<'a>> {
     if let Some(token) = token_iter.next() {
         match token.kind {
             TokenKind::Literal(ref literal_kind) => {
