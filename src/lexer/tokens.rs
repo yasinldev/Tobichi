@@ -20,6 +20,8 @@ pub enum Tokens<'a> {
     Greater,
     #[token("<")]
     Less,
+    #[token(":")]
+    ThreeDot,
     #[regex("-?([0-9])+", |lex| lex.slice().parse())]
     Number(f64),
     #[token("var")]
@@ -44,6 +46,7 @@ pub enum Tokens<'a> {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum TokenKind {
+    ThreeDot,
     OpenParen,
     CloseParen,
     Plus,
@@ -80,6 +83,7 @@ pub enum IdentKind {
     Var,
     Plus,
     Minus,
+    ThreeDot,
     Star,
     Slash,
     Assign,
@@ -105,6 +109,7 @@ impl<'a> Ident<'a> {
             | IdentKind::Minus
             | IdentKind::Slash
             | IdentKind::Greater
+            | IdentKind::ThreeDot
             | IdentKind::Less
             | IdentKind::While
             | IdentKind::If
