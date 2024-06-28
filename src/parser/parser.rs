@@ -10,7 +10,7 @@ pub enum Expr<'a> {
         condition: Box<Expr<'a>>,
         body: Vec<Expr<'a>>
     },
-    Variables {
+    Assign {
         name: Ident<'a>,
         value: Box<Expr<'a>>,
     },
@@ -45,7 +45,7 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
                 if let Some(Token { kind: TokenKind::Ident(_), value: Some(name_value) }) = token_iter.next() {
                     if let Some(Token { kind: TokenKind::Assign, .. }) = token_iter.next() {
                         if let Some(value_expr) = parse_expr(&mut token_iter) {
-                            expr_tree.push(Expr::Variables {
+                            expr_tree.push(Expr::Assign {
                                 name: Ident {
                                     kind: IdentKind::Var,
                                     value: Some(name_value),
