@@ -36,6 +36,8 @@ pub enum Tokens<'a> {
     While,
     #[token("if")]
     If,
+    #[token("mutable")]
+    Mutable,
     #[token("else")]
     Else,
     #[regex("[a-zA-Z]+")]
@@ -58,6 +60,7 @@ pub enum TokenKind {
     CloseBrace,
     OpenParen,
     CloseParen,
+    Mutable,
     Plus,
     Minus,
     Star,
@@ -94,6 +97,7 @@ pub enum IdentKind {
     Minus,
     ThreeDot,
     OpenBrace,
+    Mutable,
     CloseBrace,
     Identifier,
     Semicolon,
@@ -130,6 +134,7 @@ impl<'a> Ident<'a> {
             | IdentKind::While
             | IdentKind::If
             | IdentKind::Else
+            | IdentKind::Mutable
             => true,
             _ => false
         }

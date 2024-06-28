@@ -27,11 +27,14 @@ pub fn get_token_stream(raw_code: &String) -> Vec<Token> {
             }
 
             Some(Tokens::Identifier(val)) => (
-                TokenKind::Ident(IdentKind::Var),
+                TokenKind::Ident(IdentKind::Identifier),
                 Some(Value::String(val)),
             ),
 
+            Some(Tokens::While) => (TokenKind::While, None),
             Some(Tokens::OpenParen) => (TokenKind::OpenParen, None),
+            Some(Tokens::OpenBrace) => (TokenKind::OpenParen, None),
+            Some(Tokens::CloseBrace) => (TokenKind::CloseParen, None),
             Some(Tokens::CloseParen) => (TokenKind::CloseParen, None),
             Some(Tokens::Plus) => (TokenKind::Plus, None),
             Some(Tokens::Minus) => (TokenKind::Minus, None),
@@ -39,13 +42,13 @@ pub fn get_token_stream(raw_code: &String) -> Vec<Token> {
             Some(Tokens::Slash) => (TokenKind::Slash, None),
             Some(Tokens::Assign) => (TokenKind::Assign, None),
             Some(Tokens::Greater) => (TokenKind::Greater, None),
+            Some(Tokens::Mutable) => (TokenKind::Mutable, None),
             Some(Tokens::Less) => (TokenKind::Less, None),
             Some(Tokens::ThreeDot) => (TokenKind::ThreeDot, None),
             Some(Tokens::Semicolon) => (TokenKind::Semicolon, None),
-            Some(Tokens::Var) => (TokenKind::Ident(IdentKind::Var), None),
-            Some(Tokens::While) => (TokenKind::Ident(IdentKind::While), None),
-            Some(Tokens::If) => (TokenKind::Ident(IdentKind::If), None),
-            Some(Tokens::Else) => (TokenKind::Ident(IdentKind::Else), None),
+            Some(Tokens::Var) => (TokenKind::Var, None),
+            Some(Tokens::If) => (TokenKind::If, None),
+            Some(Tokens::Else) => (TokenKind::Else, None),
             Some(Tokens::Whitespace) => continue,
             Some(Tokens::Error) => continue,
             None => break
