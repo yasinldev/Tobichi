@@ -1,5 +1,5 @@
 use crate::lexer::tokens::{Ident, IdentKind, Token, TokenKind, Value};
-use crate::parser::parser::Expr::Builtin;
+use crate::parser::parser::Expr::{Builtin};
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Expr<'a> {
@@ -12,7 +12,7 @@ pub enum Expr<'a> {
     },
     Variables {
         name: Ident<'a>,
-        value: Box<Expr<'a>>
+        value: Box<Expr<'a>>,
     },
 }
 
@@ -42,7 +42,25 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
                 }
             },
             TokenKind::Var => {
-                println!("Var Token: {:?}", token);
+                if let Some(Token { kind: TokenKind::Ident(_), value: Some(name_value) }) = token_iter.next() {
+                    if let Some(Token { kind: TokenKind::Assign, .. }) = token_iter.next() {
+                        if let Some(value_expr) = parse_expr(&mut token_iter) {
+                            expr_tree.push(Expr::Variables {
+                                name: Ident {
+                                    kind: IdentKind::Var,
+                                    value: Some(name_value),
+                                },
+                                value: Box::new(value_expr),
+                            });
+                        } else {
+                            println!("Unexpected token after '=': {:?}", token_iter.next());
+                        }
+                    } else {
+                        println!("Expected '=' after variable name, found: {:?}", token_iter.next());
+                    }
+                } else {
+                    println!("Unexpected token: {:?}", token_iter.next());
+                }
             }
             TokenKind::While => {
                 if let Some(condition_expr) = parse_expr(&mut token_iter) {
