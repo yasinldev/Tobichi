@@ -101,7 +101,7 @@ Expression Tree: [
 ```
 Below is the expression tree version of the above code.
 
-![img.png](public/img.png)
+![img.png](public/img_1.png)
 ## Setup Development Environment
 * LLVM version 10.0 (https://llvm.org)
 * Latest stable version of Rust (https://www.rust-lang.org/tools/install)
