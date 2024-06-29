@@ -99,6 +99,8 @@ Expression Tree: [
     },
 ]
 ```
+Expression tree is a tree structure that represents the code in a more readable way. This tree structure is used to generate the LLVM IR code.
+
 Below is the expression tree version of the above code.
 
 ![img.png](public/img_1.png)
