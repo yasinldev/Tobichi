@@ -36,7 +36,7 @@ pub enum Tokens<'a> {
     While,
     #[token("if")]
     If,
-    #[token("mutable")]
+    #[token("mut")]
     Mutable,
     #[token("else")]
     Else,
