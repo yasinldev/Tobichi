@@ -11,7 +11,8 @@ pub enum Expr<'a> {
         body: Vec<Expr<'a>>
     },
     Assign {
-        name: Ident<'a>,
+        a_type: Ident<'a>,
+        mutable: bool,
         value: Box<Expr<'a>>,
     },
 }
@@ -26,7 +27,7 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
                 if let Some(value) = token.value {
                     expr_tree.push(Expr::Constant(value));
                 } else {
-                    println!("Unexpected Token: {:?}", token);
+                    panic!("Unexpected Token: {:?}", token);
                 }
             },
             TokenKind::Ident(ref ident_kind) => {
@@ -38,28 +39,35 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
                         })
                     )
                 } else {
-                    println!("Unexpected token: {:?}", token);
+                    panic!("Unexpected token: {:?}", token);
                 }
             },
             TokenKind::Var => {
-                if let Some(Token { kind: TokenKind::Ident(_), value: Some(name_value) }) = token_iter.next() {
+                let mutable = if let Some(Token { kind: TokenKind::Mutable, .. }) = token_iter.peek() {
+                    token_iter.next();
+                    true
+                } else {
+                    false
+                };
+                if let Some(Token { kind: TokenKind::Ident(_), value: Some(var_name) }) = token_iter.next() {
                     if let Some(Token { kind: TokenKind::Assign, .. }) = token_iter.next() {
                         if let Some(value_expr) = parse_expr(&mut token_iter) {
                             expr_tree.push(Expr::Assign {
-                                name: Ident {
+                                a_type: Ident {
                                     kind: IdentKind::Var,
-                                    value: Some(name_value),
+                                    value: Some(var_name),
                                 },
+                                mutable,
                                 value: Box::new(value_expr),
                             });
                         } else {
-                            println!("Unexpected token after '=': {:?}", token_iter.next());
+                            panic!("Unexpected token in expression: {:?}", token_iter.next());
                         }
                     } else {
-                        println!("Expected '=' after variable name, found: {:?}", token_iter.next());
+                        panic!("Expected '=' after variable name, found: {:?}", token_iter.peek());
                     }
                 } else {
-                    println!("Unexpected token: {:?}", token_iter.next());
+                    panic!("Unexpected token after 'var', expected identifier: {:?}", token_iter.next());
                 }
             }
             TokenKind::While => {
@@ -82,7 +90,7 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
                         body,
                     });
                 } else {
-                    println!("Unexpected token: {:?}", token);
+                    panic!("Unexpected token: {:?}", token);
                 }
             }
             _ => {
