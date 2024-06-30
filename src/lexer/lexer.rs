@@ -32,6 +32,8 @@ pub fn get_token_stream(raw_code: &String) -> Vec<Token> {
             ),
 
             Some(Tokens::While) => (TokenKind::While, None),
+            Some(Tokens::Printf) => (TokenKind::Printf, None),
+            Some(Tokens::Function) => (TokenKind::Function, None),
             Some(Tokens::OpenParen) => (TokenKind::OpenParen, None),
             Some(Tokens::OpenBrace) => (TokenKind::OpenParen, None),
             Some(Tokens::CloseBrace) => (TokenKind::CloseParen, None),

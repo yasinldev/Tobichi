@@ -36,6 +36,10 @@ pub enum Tokens<'a> {
     While,
     #[token("if")]
     If,
+    #[token("fn")]
+    Function,
+    #[token("printf")]
+    Printf,
     #[token("mut")]
     Mutable,
     #[token("else")]
@@ -65,6 +69,8 @@ pub enum TokenKind {
     Minus,
     Star,
     Slash,
+    Function,
+    Printf,
     Assign,
     Greater,
     Less,
@@ -107,6 +113,8 @@ pub enum IdentKind {
     Greater,
     Less,
     While,
+    Function,
+    Printf,
     If,
     Else,
 }
@@ -132,6 +140,8 @@ impl<'a> Ident<'a> {
             | IdentKind::Identifier
             | IdentKind::Less
             | IdentKind::While
+            | IdentKind::Function
+            | IdentKind::Printf
             | IdentKind::If
             | IdentKind::Else
             | IdentKind::Mutable
