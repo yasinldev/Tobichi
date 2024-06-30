@@ -12,7 +12,7 @@ pub enum Expr<'a> {
     },
     Assign {
         a_type: Ident<'a>,
-        mutable: bool,
+        mutable: Option<bool>,
         value: Box<Expr<'a>>,
     },
 }
@@ -57,7 +57,7 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
                                     kind: IdentKind::Var,
                                     value: Some(var_name),
                                 },
-                                mutable,
+                                mutable: Some(mutable),
                                 value: Box::new(value_expr),
                             });
                         } else {
@@ -69,7 +69,7 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
                 } else {
                     panic!("Unexpected token after 'var', expected identifier: {:?}", token_iter.next());
                 }
-            }
+            },
             TokenKind::While => {
                 if let Some(condition_expr) = parse_expr(&mut token_iter) {
                     let mut body = Vec::new();
@@ -92,7 +92,8 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
                 } else {
                     panic!("Unexpected token: {:?}", token);
                 }
-            }
+            },
+            // TODO: Handle printf and fn keywords
             _ => {
                 println!("Raw token: {:?}", token)
             }
@@ -101,7 +102,8 @@ pub fn generate_expr_tree(token_stream: Vec<Token>) -> Vec<Expr> {
     expr_tree
 }
 
-fn parse_expr<'a, I>(token_iter: &mut std::iter::Peekable<I>) -> Option<Expr<'a>> where I: Iterator<Item = Token<'a>> {
+fn parse_expr<'a, I>(token_iter: &mut std::iter::Peekable<I>)
+    -> Option<Expr<'a>> where I: Iterator<Item = Token<'a>> {
     if let Some(token) = token_iter.next() {
         match token.kind {
             TokenKind::Literal(ref literal_kind) => {
