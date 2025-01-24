@@ -1,0 +1,11 @@
+[package]
+name = "TobichiRW"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+docopt = "0.6"
+llvm-sys = "150.0.0"
+rustc-serialize = "0.3"
+libc = "0.2.169"
+regex = "1.10.0"
